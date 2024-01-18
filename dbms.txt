@@ -1,0 +1,162 @@
+subquery
+a subquery is a query that is nested inside 
+select insert update delete
+a subquery can be wrtitten in select statement
+from clause
+where clause
+having clause
+a subquery is also reffererd as inner query
+and outer query is parent query i.e main query
+255 levels from FROM clause to WHERE
+Q1)
+ select sysdate Today,
+       (select count(*) FROM departments)Dept_count,
+       (select count(*) FROM employees)EMp_count
+from dual;
+Q2)write a query to identify all the eployees who are managers
+this will; require using a subquery in the Where clasue t slelect all the 
+employees where EMployess_id appers as a MANAGER_ID
+Select last_name FROM employees
+WHERE employee_id IN
+(SELECT manager_id FROM employees);
+Q3)which employees have a salary that is less than thwe average salary?
+
+SELECT last_name
+FROM employees
+WHERE salary<(SELECT avg(salary) FROM employees);
+ find all the departments that do actually have one or  more employees assigned to them
+SELECT department_name
+FROM deprtments
+WHERE department_id IN
+(SELECT DISTINCT(department_id)
+FROM employees);
+Q4) find all the departments that do actully haev onew or more employees assigned to them
+
+
+
+Scalar single and multiple subqueris operators
+
+= equal
+> greater than
+>= greater than or equal to
+< less than
+<= less than or equalk to
+<> not equakl to
+!= not equal to
+operators for multiple row subquerise 
+IN -equal to any member in a list 
+NOT IN -not equal to any members in a list 
+ANY -return row that matches any value on a list and must be used with a comparission operators
+ALL -return row that matches all value on a list and must be used with a comparission operators
+
+consider a products table 
+Products(product_id,cate_id,products_name,Price)
+Q6) which products cost mkore than products no.64
+select product_id,product_name,price from products where price>
+(Select price form products
+where products_id=54);
+
+Q7)retreive the products whose category number is the same as that of the products no 64
+select PRoducts_name,product_id,price,cate_id
+from products
+where ctae=_id(SELECTcate_id
+FROM products
+Where product=64):
+
+Q8)display all the products whosw category number is the same as the product 54,excluding prdocut54
+select product_name,product_id,price,category_id
+from products
+where category_id=(SELECT category_id
+ FROM products
+WHERE product_id=54)
+and product-id<>54
+
+Q9)retreive all the products that cost mpre then average price in category no 60
+
+SELECT product_name,product_id,price,cate_id
+FROM products
+WHERE price>(SELECT AVG(price)
+FROM products
+WHERE cate_no=60)
+Q10)retrievs a summary of the average price ofeach category for all the
+category whose average price is greater than the average price of the categiry no 90
+
+SELECT cate_id, AVG(price)
+FROM products
+GROUP BY cate_id
+HAVING AVG(price) > (SELECT AVG(price)
+FROM products
+WHERE cate_id=90)
+
+Q11)retrive all products thqat cost more than the product no 54
+and their category number equal to the category number of product 42,including product no 42
+SELECT product_name,product_id,price
+FROM products
+WHERE price>(SELECT price
+FROM products
+WHERE product_id=54)
+AND cate_id=(SELECT cate_id
+FROM products
+WHERE products_id=42
+AND product_id <> 42)
+
+Q12)Retreive all products whose price is equal to one of the products in the category 80;
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price IN(SELECT price
+FROM products
+WHERE category_id=80)
+
+Q13)TO display all the products whose price is equal to one of the products in category 80
+excluding the products in category 80
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price IN(SELECT price
+FROM products
+WHERE cate_id=80)
+AND cate_id <>80
+
+Q14)retrieve all the products which price is greater than at least one of the peices of the
+products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price>ANY(SELECT price
+FORM products
+WHERE cate_id=80)
+
+Q15)retrieve all the products which price is lower than at least one of the peices of the
+products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price<ANY(SELECT price
+FORM products
+WHERE cate_id=80)
+
+Q16)retrieve all the products which price is equal than at least one of the peices of the
+products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price=ANY(SELECT price
+FORM products
+WHERE cate_id=80)
+
+Q17)retrieve all the products which price is greater than all of the peices of the
+products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price>ALL(SELECT price
+FORM products
+WHERE cate_id=80)
+
+
+
+
+
+
+

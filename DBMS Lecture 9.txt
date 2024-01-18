@@ -1,0 +1,199 @@
+
+SUBQUERY:
+A subquery is query nested inside a SELECT, INSERT, UPDATE, or DELETE statement or inside another subquery.
+
+A subquery can return a set of rows or just one row to its parent query.
+
+Salar subquery is a query that returns exactly one value.
+
+the places in a query where a subquery may be used as follows:
+
+a. In the SELECT list used for column projection
+b. In the FROM clause.
+c. In the WHERE clause.
+d. In the HAVING clause.
+
+Subquery is called as INNER QUERY
+PARENTQUERY is called OUTER QUERY.
+
+Q-1: the query will report on the current numbers of departments and staff?
+
+Query:  
+SELECT sysdate Today,
+(SELECT count(*)FROM departments)Dept_count
+(SELECT count(*)FROM employees)Emp_count
+FROM dual;
+
+Q-2: Write a query to identify all the employees who are managers.
+
+this will require using a subquery in the where clause to select all the employees whoe EMPLOYEE_ID appears
+as a MANAGER_ID:
+
+SELECT last_name FROM employees
+WHERE employee_id IN
+(SELECT manager_id FROM employees);
+
+Q-3: Which employees have a salary that is less than the average salary?
+
+eg.
+
+SELECT last_name
+FROM employees
+WHERE salary<(Select avg(salary)FROM employees);
+
+Q-4: find the name of employees having same salary?
+
+Q-5: Find all departments that do actually have one or more employees assigned to them
+
+SELECT department_name
+FROM departments
+WHERE department_id IN
+(SELECT DISTINCT (department_id)
+FROM emplopyees);
+
+SCALAR single subquery and multiple Subqueries OPERATORS:
+
+=	- Equal
+>	- Greater than
+>=	- Greater than or equal
+<	- Less than
+<=	- Less than or equal
+<>	- not equal
+!=	- not equal
+
+for multiple subquery:
+
+IN		- equal to any member in a list
+NOT IN 		- Not equal to any member in a list.
+ANY		- Returns rows that match any value on a list and must be used with a comparision operator
+ALL		- Returns rows that match all the values in a list must be used with a comparison operator.
+
+
+Consider the products table
+
+products()
+product_id, cate_id, product_name, Price)
+
+
+Q-6: which products cost more than product no 54.?
+
+Select product_id, product_name, price
+FROM products
+Where price>(Select price 
+from products
+where product_id = 54);
+
+Q-7: Retrive the products whose category number is the same as that of product no 64?
+
+Select product_name, product_id, price, cate_id
+FROM products
+WHERER cate_id = (SELECT cate_id
+FROM products
+WHERE product_id=64);
+
+
+q-8: Display all the products whose category number is the same as the product 54, excluding product 54
+
+SELECT product_name, product_id, price, cate_id
+FROM products
+WHERE category_id = (Select cate_id
+FROM products
+WHERE product_id = 54)
+AND product_id<>54
+
+
+Q-9: Retrive all products that cost more than the average price in category no 60:
+
+SELECT product_name, product_id,price,cate_id
+FROM products
+WHERE price>(SELECT avg(price)
+FROM products
+WHere cate_no = 60)
+
+
+q-10:  retrieves a summary of the average price for each category, for all categories 
+whose average price is  greater than the average price of category no 90:
+
+SELECT cate_id, AVG(price)
+FROM products
+GROUP BY cate_id
+HAVING AVG(price) > (SELECT AVG(price)
+FROM products
+WHERE cate_id = 90)
+
+Q-11: Retrieve all products that cost more than product no 54 and their category number equal the category number of products no 42, not including product no 42.
+
+SELECT product_id, product_name, price
+FROM products
+WHERE price> (SELECT price
+FROM products
+WHERE product_id = 54)
+AND cate_id=(SELECT cate_id
+FROM products
+WHERE product_id = 42)
+AND product_id <>42
+
+
+Q-12: Retrieve all products whose price is equal to one  of the prices of products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price IN (SELECT price
+FROM products
+WHERE cate_id = 80)
+
+
+
+Q-13: To display all products whose price is equal to one of the prices of products in category 80,
+excluding the products in category 80.
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price IN (SELECT price
+FROM products
+WHERE cate_id = 80)
+AND cate_id <>80
+
+Q-14: Retrieve all products whicgh price is greater then at least one of the prices of 
+the products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price > ANY(SELECT price
+FROM products
+WHERE cate_id = 80)
+
+Q-15: Retrieve all products whicgh price is lower then at least one of the prices of 
+the products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price < ANY(SELECT price
+FROM products
+WHERE cate_id = 80)
+
+Q-16:Retrieve all products whicgh price is equal then at least one of the prices of 
+the products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price = ANY(SELECT price
+FROM products
+WHERE cate_id = 80)
+
+Q-17:Retrieve all products whicgh price is greater than all the prices of 
+the products in category 80:
+
+SELECT product_id,product_name,price
+FROM products
+WHERE price > ALL(SELECT price
+FROM products
+WHERE cate_id = 80)
+
+
+
+3rd dec - python 2-3:30 exam theory with practical: mcq + programs
+5th dec - DBMS "
+9th Dec - H&N   "
+
+
